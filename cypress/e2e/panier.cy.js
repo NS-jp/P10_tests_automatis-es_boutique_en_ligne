@@ -47,7 +47,7 @@ describe ("Verify cart functionality", ()=> {
         
         const token = window.localStorage.getItem('authToken')
         
-        cy.visit('/#/products')
+        cy.visit('/#/')
         cy.get ('[data-cy="product-home-link"]').first().click()
         cy.get ('[data-cy="detail-product-add"]').click()
 
@@ -119,20 +119,22 @@ describe ("Verify cart functionality", ()=> {
 
     it ("can't access to cart when entering negative quantities", ()=> {
 
-        cy.visit('/#/products/4')
+        cy.visit('/#/')
+        cy.get ('[data-cy="product-home-link"]').first().click()
 
         cy.get('[data-cy="detail-product-quantity"]')
             .should('be.visible')
             .clear()
             .type(-1);
 
-        cy.get('[data-cy= "detail-product-add"]').click()
+        cy.get('[data-cy="detail-product-add"]').click()
         cy.url().should('not.include', '/cart')
     })
 
     it ("can't access to cart when entering quantities >= 20 ", ()=> {
 
-        cy.visit('/#/products/4')
+        cy.visit('/#/')
+        cy.get ('[data-cy="product-home-link"]').first().click()
 
         cy.get('[data-cy="detail-product-quantity"]')
             .should('be.visible')
