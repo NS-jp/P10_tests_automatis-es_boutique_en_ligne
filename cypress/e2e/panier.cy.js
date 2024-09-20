@@ -35,6 +35,7 @@ describe ("Verify cart functionality", ()=> {
                 if (matches) {
                     const stockCount = parseInt(matches[0], 10);
                     expect(stockCount).to.not.be.NaN;
+                    expect (stockCount).to.be.at.least(1);
                     cy.log(stockCount);
                 } else {
                     throw new Error('stock number not found');
@@ -63,18 +64,21 @@ describe ("Verify cart functionality", ()=> {
         })
     })
 
-    //Echéc1: avec cy.intercept et cy.wait / cy.wait (1000) = [data-cy="detail-product-stock"] not found - ligne 77 
-    //Echéc2: sans cy.intercept ni cy.wait = error Initial stock not found
-
     it ("check if stock is updated when adding product to cart", ()=>{
-        
-        //cy.intercept('GET', 'http://localhost:8081/products/4').as('getProduct')
-        
-        cy.visit('/#/products/4')
 
-        //cy.wait ('@getProduct')
+        const token = window.localStorage.getItem('authToken')
+        
+        cy.visit('/#/')
 
-        cy.get ('[data-cy="detail-product-stock"]')
+        cy.get ('[data-cy="product-home-link"]').first().then((firstProduct) => {
+            const routerLink = firstProduct.attr('ng-reflect-router-link');
+            const productId = routerLink.split(',').pop(); 
+            cy.log('Product ID:', productId)
+            cy.wrap(firstProduct).click(); 
+
+            cy.wait (1000);
+
+            cy.get ('[data-cy="detail-product-stock"]')
             .should('be.visible')
             .should('contain', 'en stock')
             .invoke('text')
@@ -86,28 +90,32 @@ describe ("Verify cart functionality", ()=> {
                 
                     cy.get('[data-cy= "detail-product-add"]').click();
 
-                    cy.visit('/#/products/4'); 
+                    cy.url().should('include', '/cart')
 
-                    //cy.wait('@getProduct'); 
-        
-                cy.get('[data-cy="detail-product-stock"]')
-                    .should('be.visible')
-                    .invoke('text')
-                    .then((text) => {
-                        const matches = text.match(/-?\d+/); 
-                        if (matches){
-                        const stockUpdated = parseInt(matches[0], 10);
-                        expect (stockUpdated).to.equal(stockInitial - 1);
-                        } else {
-                            throw new Error ('Updated stock not found');
-                        }
-                    });
-        } else {
-            throw new Error ('Initial stock not found'); 
-        }  
-        })
+                    cy.visit(`/#/products/${productId}`); 
 
+                    cy.wait(1000)
+
+                    cy.get('[data-cy="detail-product-stock"]')
+                        .should('be.visible')
+                        .invoke('text')
+                        .then((text) => {
+                            const matches = text.match(/-?\d+/); 
+                            if (matches){
+                                const stockUpdated = parseInt(matches[0], 10);
+                                expect (stockUpdated).to.equal(stockInitial - 1);
+                            } else {
+                                throw new Error ('Updated stock not found');
+                            }
+                        });
+                } else {
+                    throw new Error ('Initial stock not found'); 
+                }
+            })
     })
+})
+
+
 
     it ("can't access to cart when entering negative quantities", ()=> {
 
