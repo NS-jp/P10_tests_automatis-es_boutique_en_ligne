@@ -87,10 +87,10 @@ let token;
         })
     })
 
-    context ("PUT /orders", () => {
+    context ("POST /orders", () => {
         it ("add an available product to the cart", () => {
             cy.request({
-                method: "Put", 
+                method: "Post", 
                 url: apiOrders + "/add", 
                 headers: {
                 "Authorization":"Bearer " + token
@@ -107,7 +107,7 @@ let token;
 
         it ("add an unavailable product to the cart", () => {
             cy.request({
-                method: "Put", 
+                method: "Post", 
                 url: apiOrders + "/add", 
                 headers: {
                 "Authorization":"Bearer " + token
@@ -121,16 +121,8 @@ let token;
                 expect(response.status).to.eq(400);
             })
         })
-
-
-
-
-
-
-
-
-
     })
+    
 })
 
 

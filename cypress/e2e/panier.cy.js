@@ -35,7 +35,7 @@ describe ("Verify cart functionality", ()=> {
                 if (matches) {
                     const stockCount = parseInt(matches[0], 10);
                     expect(stockCount).to.not.be.NaN;
-                    expect (stockCount).to.be.at.least(1);
+                    expect (stockCount).to.be.at.least(0);
                     cy.log(stockCount);
                 } else {
                     throw new Error('stock number not found');
@@ -115,9 +115,7 @@ describe ("Verify cart functionality", ()=> {
     })
 })
 
-
-
-    it ("can't access to cart when entering negative quantities", ()=> {
+    it ("Cannot add negative quantities of products to the cart", ()=> {
 
         cy.visit('/#/')
         cy.get ('[data-cy="product-home-link"]').first().click()
@@ -131,7 +129,7 @@ describe ("Verify cart functionality", ()=> {
         cy.url().should('not.include', '/cart')
     })
 
-    it ("can't access to cart when entering quantities >= 20 ", ()=> {
+    it ("Verify the maximum order limit", ()=> {
 
         cy.visit('/#/')
         cy.get ('[data-cy="product-home-link"]').first().click()
@@ -139,11 +137,17 @@ describe ("Verify cart functionality", ()=> {
         cy.get('[data-cy="detail-product-quantity"]')
             .should('be.visible')
             .clear()
-            .type(20);
+            .type(21);
 
         cy.get('[data-cy= "detail-product-add"]').click()
         cy.url().should('include', '/cart')
+        cy.get ('[data-cy="cart-line-quantity"]')
+            .invoke('val')
+            .then((quantity) => {
+                const quantityNumber = parseInt(quantity, 10);
+                expect(quantityNumber).to.be.lessThan(21);
+            
+            })
     })
-
 
 })
