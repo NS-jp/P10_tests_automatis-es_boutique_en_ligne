@@ -11,8 +11,8 @@ Téléchargez la dernière version LTS de Node depuis le site https://nodejs.org
 Depuis un terminal ouert dans le dossier du projet, lancez la commande :`npm install cypress --save-dev`
 
 ## Configuration Cypress 
-Une fois que Cypress installé, lancez la commande suivante depuis un terminal ouvert: `npx cypress open`, afin d'initialiser Cypress pour le projet. 
+1. Une fois que Cypress installé, lancez la commande suivante depuis un terminal ouvert: `npx cypress open`, afin d'initialiser Cypress pour le projet. 
 
-Choisissez le type de tests "E2E Testing", puis le navigateur de votre choix. 
+2. Choisissez le type de tests "E2E Testing", puis le navigateur de votre choix. 
 
-Optez pour l'option "Scaffold example specs" et exécutez le test en sélectionnant le fichier correspondant. 
+3. Optez pour l'option "Scaffold example specs" et exécutez le test en sélectionnant le fichier correspondant. 
